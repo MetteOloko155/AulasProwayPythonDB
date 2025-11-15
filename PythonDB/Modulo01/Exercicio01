@@ -1,0 +1,56 @@
+import sqlite3
+from time import sleep
+
+# Animação de carregamento
+for i in range(1, 21):
+    print("*" * i, end="\r")
+    sleep(0.2)
+
+# Cabeçalho
+print("\n" + "=" * 50)
+print("Seja bem-vindo à Aula de Python com Banco de Dados")
+print("=" * 60)
+
+# Solicitação de dados do usuário
+nome = input("Digite seu nome: ").strip().title()
+sobrenome = input("Digite seu sobrenome: ").strip().title()
+idade = input("Digite sua idade: ").strip()
+
+# Conexão com o banco de dados SQLite
+conexao = sqlite3.connect("Abobrinha.db")
+cursor = conexao.cursor()
+
+# Pergunta sobre criação de nova tabela
+resposta = input(f"{nome}, você deseja criar uma nova tabela? (s/n): ").strip().lower()
+
+if resposta == "s":
+    nome_tabela = input("Digite o nome da nova tabela: ").strip()
+
+    # Criação da tabela
+    sql_criar = f"CREATE TABLE IF NOT EXISTS {nome_tabela} (id INTEGER PRIMARY KEY AUTOINCREMENT)"
+    cursor.execute(sql_criar)
+    conexao.commit()
+    print(f"Tabela '{nome_tabela}' criada com sucesso!")
+
+    # Pergunta se deseja deletar a tabela
+    deletar = input(f"{nome}, você deseja deletar a tabela '{nome_tabela}'? (s/n): ").strip().lower()
+    if deletar == "s":
+        sql_deletar = f"DROP TABLE IF EXISTS {nome_tabela}"
+        cursor.execute(sql_deletar)
+        conexao.commit()
+        print(f"Tabela '{nome_tabela}' foi deletada com sucesso!")
+    else:
+        print("Tabela mantida no banco de dados.")
+
+else:
+    print("Nenhuma tabela foi criada.")
+
+# Pergunta se deseja continuar
+continuar = input(f"{nome}, você deseja continuar no sistema? (s/n): ").strip().lower()
+if continuar == "s":
+    print("Retornando ao sistema... (mas aqui terminamos o exemplo 😄)")
+else:
+    print("Saindo do sistema... Até a próxima!")
+
+# Fecha a conexão
+conexao.close()
